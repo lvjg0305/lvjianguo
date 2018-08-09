@@ -1,0 +1,52 @@
+server:
+
+  port: 10001
+spring:
+  application:
+    name: CRSwi-Inspection-WebServer
+  datasource:
+    url: jdbc:mysql://leng45.eicp.net:3306/CRSwi-Inspection?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: noroot
+    driver_class_namel: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    max_active: 20
+    initial_size: 1
+    min_idle: 3
+    max_wait: 60000
+    time_between_eviction_runs_millis: 60000
+    min_evictable_idle_time_millis: 300000
+    test_while_idle: true
+    test_on_borrow: false
+    test_on_return: false
+    poolPreparedStatements: true
+path:
+    fwFilePath: /var/lib/tomcat8/webapps/DataShield/FW/
+    fwServerPath: http://leng45.eicp.net:8080/DataShield/FW/
+    logFilePath: rsync@leng45.eicp.net::log
+    localLogFilePath: /home/ubuntu/log/
+    logFilePwd: password
+    dataFilePath: rsync@leng45.eicp.net::data
+    dataServerPath: http://leng45.eicp.net:8080/data/
+    localDataFilePath: /var/lib/tomcat8/webapps/data/
+    dataFilePwd: password
+
+#ftp配置
+ftp:
+  url:
+  port:
+  userName:
+  passWord:
+
+#文件参数
+attachment:
+  #txt
+  txtFile:
+    dirRoot: /var/lib/tomcat8/webapps/Inspection/icon
+    type: txt
+  #doc
+  docFile:
+    dirRoot: /var/lib/tomcat8/webapps/Inspection/padimage/photo
+    type: doc
+    
+debug: true
