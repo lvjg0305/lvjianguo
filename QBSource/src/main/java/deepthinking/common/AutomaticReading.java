@@ -10,11 +10,13 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import deepthinking.aspect.GetFileFromFTP;
+
 
 @Component
 public class AutomaticReading implements ApplicationRunner{
 	private static long initialDelay = 1;
-	private static long period = 60;
+	private static long period = 6000;
 	//时间间隔(一天)
 //	private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
 	
@@ -31,7 +33,7 @@ public class AutomaticReading implements ApplicationRunner{
             public void run() {  
             	try {
             		//执行读取FTP文件的方法
-            		
+            		GetFileFromFTP.findFile();
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				} 

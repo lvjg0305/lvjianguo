@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix="ftp")
 public class FTPconetCof {
 	private static String url;
-	private static String port;
+	private static int port;
 	private static String userName;
 	private static String passWord;
 	public static String getUrl() {
@@ -16,10 +16,10 @@ public class FTPconetCof {
 	public static void setUrl(String url) {
 		FTPconetCof.url = url;
 	}
-	public static String getPort() {
+	public static int getPort() {
 		return port;
 	}
-	public static void setPort(String port) {
+	public static void setPort(int port) {
 		FTPconetCof.port = port;
 	}
 	public static String getUserName() {

@@ -33,10 +33,10 @@ path:
 
 #ftp配置
 ftp:
-  url:
-  port:
-  userName:
-  passWord:
+  url: localhost
+  port: 14147
+  userName: test
+  passWord: 123456
 
 #文件参数
 attachment:
@@ -46,7 +46,7 @@ attachment:
     type: txt
   #doc
   docFile:
-    dirRoot: /var/lib/tomcat8/webapps/Inspection/padimage/photo
+    dirRoot: /AOService/
     type: doc
     
 debug: true

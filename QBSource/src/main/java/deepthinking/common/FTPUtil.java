@@ -18,6 +18,8 @@ public class FTPUtil {
 			try {
 				ftpClient.connect(FTPconetCof.getUrl());
 				ftpClient.login(FTPconetCof.getUserName(),FTPconetCof.getPassWord());
+				ftpClient.setControlEncoding("utf8");
+				ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
