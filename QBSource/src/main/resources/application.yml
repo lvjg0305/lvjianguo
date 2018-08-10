@@ -46,7 +46,7 @@ attachment:
     type: txt
   #doc
   docFile:
-    dirRoot: /AOService/
+    dirRoot: /qb/
     type: doc
     
 debug: true

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.net.ftp.FTPClient;
@@ -29,21 +30,23 @@ public class GetFileFromFTP {
 		try {
 			ftpClient.changeWorkingDirectory(path);
 			FTPFile[] ftpFiles = ftpClient.listFiles();
-			for(FTPFile ftpFile:ftpFiles){
-				DtsFtpFile dtsFtpFile = new DtsFtpFile();
-				// 获取ftp文件的名称
-				dtsFtpFile.setFileName(ftpFile.getName());
-				// 获取ftp文件的最后修改时间
-				dtsFtpFile.setLastTime(formatter.parse(formatter.format(ftpFile.getTimestamp().getTime())));
-				if (ftpFile.getType() == 1 && !ftpFile.getName().equals(".")
-				&& !ftpFile.getName().equals("..")) {//文件夹
-					// 获取ftp文件的当前路径
-					dtsFtpFile.setUrl(path+ ftpFile.getName());
-					//递归查询
-					getFile(path+ftpFile.getName()+ "/");
-				} else if (ftpFile.getType() == 0) {
-					dtsFtpFile.setUrl(path+ftpFile.getName());
-					readInsFromFile(ftpFile.getName(), dtsFtpFile);
+			if(ftpFiles.length>0){
+				for(FTPFile ftpFile:ftpFiles){
+					DtsFtpFile dtsFtpFile = new DtsFtpFile();
+					// 获取ftp文件的名称
+					dtsFtpFile.setFileName(ftpFile.getName());
+					// 获取ftp文件的最后修改时间
+					dtsFtpFile.setLastTime(formatter.parse(formatter.format(ftpFile.getTimestamp().getTime())));
+					if (ftpFile.getType() == 1 && !ftpFile.getName().equals(".")
+					&& !ftpFile.getName().equals("..")) {//文件夹
+						// 获取ftp文件的当前路径
+						dtsFtpFile.setUrl(path+ ftpFile.getName());
+						//递归查询
+						getFile(path+ftpFile.getName()+ "/");
+					} else if (ftpFile.getType() == 0) {
+						dtsFtpFile.setUrl(path+ftpFile.getName());
+						readInsFromFile(ftpFile.getName(), dtsFtpFile);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -51,18 +54,34 @@ public class GetFileFromFTP {
 		}
 	}
 	//抓取文件内容
-	protected static void readInsFromFile(String filePath,DtsFtpFile dtsFtpFile) throws IOException{
-		InputStream ins=ftpClient.retrieveFileStream(filePath);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(ins, "utf-8"));
-		String line; 
-		StringBuffer buffer = new StringBuffer(); 
-		while((line=reader.readLine())!=null){
-			buffer.append(line.trim());
-			System.out.println(line);
+	protected static void readInsFromFile(String filePath,DtsFtpFile dtsFtpFile){
+		InputStream ins = null;
+		BufferedReader reader=null;
+		try {
+			ins = ftpClient.retrieveFileStream(filePath);
+			if(ins!=null){
+				reader= new BufferedReader(new InputStreamReader(ins, "utf-8"));
+				String line; 
+				StringBuffer buffer = new StringBuffer(); 
+				while((line=reader.readLine())!=null){
+					buffer.append(line.trim());
+					System.out.println(line);
+				}
+			}
+			ftpClient.getReply();
+			//存入数据
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage());
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}finally {
+			try {
+				ins.close();
+				reader.close();
+			} catch (IOException e) {
+				logger.error(e.getMessage());
+			}
 		}
-		//存入数据
-		ins.close();
-		reader.close();
 	}
 }
 
