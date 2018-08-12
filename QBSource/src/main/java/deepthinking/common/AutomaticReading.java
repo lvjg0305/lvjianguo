@@ -16,7 +16,7 @@ import deepthinking.aspect.GetFileFromFTP;
 @Component
 public class AutomaticReading implements ApplicationRunner{
 	private static long initialDelay = 1;
-	private static long period = 6000;
+	private static long period = 3600;
 	//时间间隔(一天)
 //	private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
 	

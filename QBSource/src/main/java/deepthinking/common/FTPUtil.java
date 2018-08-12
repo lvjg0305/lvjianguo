@@ -22,6 +22,7 @@ public class FTPUtil {
 				ftpClient.connect(FTPconetCof.getUrl());
 				ftpClient.login(FTPconetCof.getUserName(),FTPconetCof.getPassWord());
 				ftpClient.setControlEncoding("utf8");
+//				ftpClient.doCommand("opts", "utf8 off");
 				ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
 				ftpClient.enterLocalPassiveMode();
 			} catch (SocketException e) {
