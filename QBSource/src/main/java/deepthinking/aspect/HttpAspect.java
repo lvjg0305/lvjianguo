@@ -29,7 +29,7 @@ public class HttpAspect {
 	@Autowired
     private ExceptionHandle exceptionHandle;
 
-    @Pointcut("execution(public * deepthinking.crswi.inspection.controller.*.*(..))")
+    @Pointcut("execution(public * deepthinking.controller.*.*(..))")
     public void log(){
 
     }

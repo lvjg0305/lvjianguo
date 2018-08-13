@@ -33,7 +33,7 @@ public class AutomaticReading implements ApplicationRunner{
             public void run() {  
             	try {
             		//执行读取FTP文件的方法
-            		GetFileFromFTP.findFile();
+            		GetFileFromFTP.findFile(null);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				} 

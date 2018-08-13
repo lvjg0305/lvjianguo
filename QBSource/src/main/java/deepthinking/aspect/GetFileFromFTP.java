@@ -38,9 +38,13 @@ public class GetFileFromFTP {
 	private static Logger logger = LoggerFactory.getLogger(GetFileFromFTP.class);
 	private static Properties prop = new Properties(); 
 	private static Date startTime;
-	public  static void findFile(){
+	public  static void findFile(Date time){
 		ftpClient=FTPUtil.initFtpOpen();
-		startTime=getpdTime();
+		if(time!=null){//手动触发
+			startTime=time;
+		}else{//自动触发
+			startTime=getpdTime();
+		}
 		getFile(FTP_F_Config.getDocFile().getDirRoot());
 		updateProperties();
 	}
@@ -96,6 +100,7 @@ public class GetFileFromFTP {
 				buffer = extractor.getText();
 				opcPackage.close();
 			}
+			buffer.trim().replaceAll("(\\r\\n){2,}", "\r\n").replaceAll("(\\n){2,}", "\n");
 			//存入数据
 			System.out.println(buffer.substring(0, 200));
 			System.out.println("--------------");

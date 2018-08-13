@@ -38,15 +38,15 @@ public class SwaggerConfig{
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("deepthinking.crswi.inspection.controller"))
+                .apis(RequestHandlerSelectors.basePackage("deepthinking.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("CRSwi-基于物联网技术的城市轨道交通巡检系统——《服务端API说明文档》")
-                .description("本接口文档阅读对象：终端开发人员与WEB服务前后端开发人员")
+                .title("素材抓取解析word文档工具")
+                .description("本接口主要用于调试手动抓取")
                 .version("1.0.0")
                 .build();
     }
