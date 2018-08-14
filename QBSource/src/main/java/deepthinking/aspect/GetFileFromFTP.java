@@ -52,7 +52,7 @@ public class GetFileFromFTP {
 	protected static void getFile(String path){
 		// 获得指定目录下的文件夹和文件信息
 		try {
-			ftpClient.changeWorkingDirectory(path);
+			ftpClient.changeWorkingDirectory(new String(path.getBytes("gbk"), "ISO-8859-1"));
 			FTPFile[] ftpFiles = ftpClient.listFiles();
 			if(ftpFiles.length>0){
 				for(FTPFile ftpFile:ftpFiles){
@@ -102,9 +102,7 @@ public class GetFileFromFTP {
 			}
 			buffer.trim().replaceAll("(\\r\\n){2,}", "\r\n").replaceAll("(\\n){2,}", "\n");
 			//存入数据
-			System.out.println(buffer.substring(0, 200));
-			System.out.println("--------------");
-			System.out.println(buffer.substring(200, 500));
+			System.out.println(buffer);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}finally {

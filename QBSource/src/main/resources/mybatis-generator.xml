@@ -16,7 +16,7 @@
 	</commentGenerator>
 
 	<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-		connectionURL="jdbc:mysql://leng45.eicp.net:3306/CRSwi-Inspection" userId="root"
+		connectionURL="jdbc:mysql://leng45.eicp.net:3306/test" userId="root"
 		password="noroot">
 	</jdbcConnection>
 
@@ -25,7 +25,7 @@
 	</javaTypeResolver>
 
 	<!-- generate Model -->
-	<javaModelGenerator targetPackage="deepthinking.crswi.inspection.domain"
+	<javaModelGenerator targetPackage="deepthinking.domain"
 		targetProject="src/main/java">
 		<property name="enableSubPackages" value="true" />
 		<property name="trimStrings" value="true" />
@@ -34,55 +34,10 @@
 
 	<!-- 自动生成mapper接口, ANNOTATEDMAPPER(注解) -->
 	<javaClientGenerator type="ANNOTATEDMAPPER"
-		targetPackage="deepthinking.crswi.inspection.dao.mapper" implementationPackage="deepthinking.crswi.inspection.dao.mapper.impl"
+		targetPackage="deepthinking.dao.mapper" implementationPackage="deepthinking.dao.mapper.impl"
 		targetProject="src/main/java">
 		<property name="enableSubPackages" value="true" />
 	</javaClientGenerator>
-		<!--
-		<table tableName="t_datashield_device" ></table>
-    	<table tableName="t_dictionary" ></table>
-        <table tableName="t_dictionary_value" ></table>
-        <table tableName="t_firmware" ></table>
-        <table tableName="t_inspection_line" ></table>
-        <table tableName="t_inspection_point" ></table>
-        <table tableName="t_instrument" ></table>
-        <table tableName="t_orgnization" ></table>
-        <table tableName="t_staff" ></table> -->
-    	<!--<table tableName="T_CSZD_BHTB" ></table>
-		<table tableName="T_CSZD_BHWZXX" ></table>
-		<table tableName="T_CSZD_BHXX" ></table>
-		<table tableName="T_CSZD_CSZ" ></table>
-		<table tableName="T_CSZD_DMJGLX" ></table>
-		<table tableName="T_CSZD_DMSD" ></table>
-		<table tableName="T_CSZD_PDBZ" ></table>
-		<table tableName="T_CSZD_WXCL" ></table>
-		<table tableName="T_CSZD_WXFF" ></table>
-		<table tableName="T_CSZD_XJQD" ></table>
-		<table tableName="T_CSZD_ZDFL" ></table>
-		<table tableName="T_CSZD_ZDQZ" ></table>
-		<table tableName="T_XTGL_AZB" ></table>
-		<table tableName="T_XTGL_DKJL" ></table>
-		<table tableName="T_XTGL_EJGLZX" ></table>
-		<table tableName="T_XTGL_FJ" ></table>
-		<table tableName="T_XTGL_GDXLSJ" ></table>
-		<table tableName="T_XTGL_GNSQD" ></table>
-		<table tableName="T_XTGL_JS" ></table>
-		<table tableName="T_XTGL_JSGNQX" ></table>
-		<table tableName="T_XTGL_SGZL" ></table>-->
-		<!--<table tableName="T_XTGL_TZGG" ></table>
-		<table tableName="T_XTGL_TZYJSQX" ></table>
-		<table tableName="T_XTGL_TZYJSQX" ></table>
-		<table tableName="T_XTGL_XJDSJ" ></table>
-		<table tableName="T_XTGL_XJMBDW" ></table>
-		<table tableName="T_XTGL_XTCZRZ" ></table>
-		<table tableName="T_XTGL_YH" ></table>
-		<table tableName="T_XTGL_YJGLZX" ></table>
-		<table tableName="T_XTGL_ZZJG" ></table>
-		<table tableName="T_YW_BHJL" ></table>
-		<table tableName="T_YW_GDJH" ></table>
-		<table tableName="T_YW_GDZXJL" ></table>
-		<table tableName="T_YW_TFSBXX" ></table>
-		<table tableName="T_YW_WXCLHF" ></table>
-		-->
+		<table tableName="TB_YW_SCSJ_FILE" ></table>
 	</context>
 </generatorConfiguration>  

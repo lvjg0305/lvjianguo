@@ -167,7 +167,7 @@
 		
 	</dependencies>
 	<build>
-		<finalName>CRSwi-Inspection-Server</finalName>
+		<finalName>QBsource-web-Server</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.mybatis.generator</groupId>

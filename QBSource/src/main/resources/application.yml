@@ -3,7 +3,7 @@ server:
   port: 10001
 spring:
   application:
-    name: QBsource-Inspection-WebServer
+    name: QBsource-web-Server
   datasource:
     url: jdbc:mysql://leng45.eicp.net:3306/CRSwi-Inspection?useUnicode=true&characterEncoding=UTF-8
     username: root
@@ -20,16 +20,6 @@ spring:
     test_on_borrow: false
     test_on_return: false
     poolPreparedStatements: true
-path:
-    fwFilePath: /var/lib/tomcat8/webapps/DataShield/FW/
-    fwServerPath: http://leng45.eicp.net:8080/DataShield/FW/
-    logFilePath: rsync@leng45.eicp.net::log
-    localLogFilePath: /home/ubuntu/log/
-    logFilePwd: password
-    dataFilePath: rsync@leng45.eicp.net::data
-    dataServerPath: http://leng45.eicp.net:8080/data/
-    localDataFilePath: /var/lib/tomcat8/webapps/data/
-    dataFilePwd: password
 
 #ftp配置
 ftp:
@@ -42,11 +32,11 @@ ftp:
 attachment:
   #txt
   txtFile:
-    dirRoot: /var/lib/tomcat8/webapps/Inspection/icon
+    dirRoot: /情报素材/
     type: txt
   #doc
   docFile:
-    dirRoot: /AOService/
+    dirRoot: /情报素材/
     type: doc
     
 debug: true
