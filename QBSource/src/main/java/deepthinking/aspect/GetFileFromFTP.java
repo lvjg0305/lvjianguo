@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.logging.log4j.util.PropertiesUtil;
@@ -25,12 +27,15 @@ import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.xmlbeans.XmlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import deepthinking.common.FTPUtil;
 import deepthinking.config.FTP_F_Config;
+import deepthinking.domain.TbYwScsjFile;
 import deepthinking.model.DtsFtpFile;
+import deepthinking.service.QBSourceService;
 
 public class GetFileFromFTP {
 	private static FTPClient ftpClient;
@@ -38,6 +43,9 @@ public class GetFileFromFTP {
 	private static Logger logger = LoggerFactory.getLogger(GetFileFromFTP.class);
 	private static Properties prop = new Properties(); 
 	private static Date startTime;
+	@Autowired
+	private static QBSourceService qbservice;
+	@PostConstruct
 	public  static void findFile(Date time){
 		ftpClient=FTPUtil.initFtpOpen();
 		if(time!=null){//手动触发
@@ -102,7 +110,15 @@ public class GetFileFromFTP {
 			}
 			buffer.trim().replaceAll("(\\r\\n){2,}", "\r\n").replaceAll("(\\n){2,}", "\n");
 			//存入数据
-			System.out.println(buffer);
+			TbYwScsjFile file=new TbYwScsjFile();
+			file.setBm(dtsFtpFile.getFileName());
+			file.setSclj(dtsFtpFile.getUrl());
+			file.setRksj(dtsFtpFile.getLastTime());
+			file.setNr(buffer.getBytes());
+			int i=qbservice.QBsourceAddOrUpdate(file);
+			if(i==0){
+				logger.error(dtsFtpFile.getFileName()+" 入库失败");
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}finally {
