@@ -20,11 +20,10 @@ import deepthinking.dao.mapper.TbYwScsjFileMapper;
 import deepthinking.domain.TbYwScsjFile;
 import deepthinking.domain.TbYwScsjFileCriteria;
 import deepthinking.service.QBSourceService;
-
 @Service("qBSourceService")
 public class QBSourceServiceImpl extends BaseServiceImpl<TbYwScsjFile,Long> implements QBSourceService{
 	@Autowired
-	private static TbYwScsjFileMapper mapper;
+	private TbYwScsjFileMapper mapper;
 	@Override
 	public PageInfo<TbYwScsjFile> pageFind(int pageNum, int pageSize, Object parameter)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {

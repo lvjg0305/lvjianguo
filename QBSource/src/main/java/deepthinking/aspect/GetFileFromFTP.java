@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -30,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.stereotype.Component;
 
 import deepthinking.common.FTPUtil;
 import deepthinking.config.FTP_F_Config;
@@ -37,16 +37,17 @@ import deepthinking.domain.TbYwScsjFile;
 import deepthinking.model.DtsFtpFile;
 import deepthinking.service.QBSourceService;
 
+
+@Component
 public class GetFileFromFTP {
+	@Autowired
+	private QBSourceService qbservice;
 	private static FTPClient ftpClient;
 	private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static Logger logger = LoggerFactory.getLogger(GetFileFromFTP.class);
 	private static Properties prop = new Properties(); 
-	private static Date startTime;
-	@Autowired
-	private static QBSourceService qbservice;
-	@PostConstruct
-	public  static void findFile(Date time){
+	private static Date startTime;	
+	public void findFile(Date time){
 		ftpClient=FTPUtil.initFtpOpen();
 		if(time!=null){//手动触发
 			startTime=time;
@@ -57,7 +58,7 @@ public class GetFileFromFTP {
 		updateProperties();
 	}
 	//获取文件的方法
-	protected static void getFile(String path){
+	protected void getFile(String path){
 		// 获得指定目录下的文件夹和文件信息
 		try {
 			ftpClient.changeWorkingDirectory(new String(path.getBytes("gbk"), "ISO-8859-1"));
@@ -88,7 +89,7 @@ public class GetFileFromFTP {
 		}
 	}
 	//抓取文件内容
-	protected static void readInsFromFile(String filePath,DtsFtpFile dtsFtpFile) throws XmlException, OpenXML4JException{
+	protected void readInsFromFile(String filePath,DtsFtpFile dtsFtpFile) throws XmlException, OpenXML4JException{
 		String buffer =""; 
 		File localFile=new File(filePath);
 		try {
@@ -127,7 +128,7 @@ public class GetFileFromFTP {
 			}
 		}
 	}
-	protected static Date getpdTime(){
+	protected Date getpdTime(){
 		String pdtime="1970-01-01 00:00:00";
 		Date retTime=null;
 		try {
@@ -139,7 +140,7 @@ public class GetFileFromFTP {
 		}
 		return retTime;
 	}
-	private static void updateProperties() { 
+	private void updateProperties() { 
 		 //getResource方法使用了utf-8对路径信息进行了编码，当路径中存在中文和空格时，他会对这些字符进行转换，这样， 
 		 //得到的往往不是我们想要的真实路径，在此，调用了URLDecoder的decode方法进行解码，以便得到原始的中文及空格路径。 
 		 String filePath = PropertiesUtil.class.getClassLoader().getResource("date.properties").getFile(); 

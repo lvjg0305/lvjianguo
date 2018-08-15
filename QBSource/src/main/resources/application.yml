@@ -5,7 +5,7 @@ spring:
   application:
     name: QBsource-web-Server
   datasource:
-    url: jdbc:mysql://leng45.eicp.net:3306/CRSwi-Inspection?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://leng45.eicp.net:3306/test?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: noroot
     driver_class_namel: com.mysql.jdbc.Driver

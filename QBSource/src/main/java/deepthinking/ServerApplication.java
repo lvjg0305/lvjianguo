@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfigura
 import org.springframework.boot.web.servlet.ServletComponentScan;
 
 
-@MapperScan("deepthinking.crswi.inspection.dao.mapper")
+@MapperScan("deepthinking.dao.mapper")
 @SpringBootApplication
 @ServletComponentScan
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})

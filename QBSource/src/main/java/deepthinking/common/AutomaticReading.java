@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,8 @@ public class AutomaticReading implements ApplicationRunner{
 	private static long period = 3600;
 	//时间间隔(一天)
 //	private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
-	
+	@Autowired
+	private GetFileFromFTP getFile;
 	private static Logger logger = LoggerFactory.getLogger(AutomaticReading.class);
 	
 	@Override
@@ -33,7 +35,7 @@ public class AutomaticReading implements ApplicationRunner{
             public void run() {  
             	try {
             		//执行读取FTP文件的方法
-            		GetFileFromFTP.findFile(null);
+            		getFile.findFile(null);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				} 

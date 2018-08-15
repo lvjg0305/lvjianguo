@@ -9,6 +9,7 @@ package deepthinking.controller;
 
 import java.text.SimpleDateFormat;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,8 @@ import io.swagger.annotations.ApiOperation;
 @Api(value="手动触发素材抓取")
 @RestController
 public class ManualTriggerController {
+	@Autowired
+	private GetFileFromFTP getFile;
 	/**
 	 * 
 	 * @param time
@@ -40,7 +43,7 @@ public class ManualTriggerController {
 		}
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			GetFileFromFTP.findFile(formatter.parse(time));
+			getFile.findFile(formatter.parse(time));
 		} catch (Exception e) {
 			i=0;
 		}
