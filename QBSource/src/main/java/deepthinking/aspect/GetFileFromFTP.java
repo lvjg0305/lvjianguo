@@ -32,6 +32,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Component;
 
 import deepthinking.common.FTPUtil;
+import deepthinking.common.RxWordUtil;
 import deepthinking.config.FTP_F_Config;
 import deepthinking.domain.TbYwScsjFile;
 import deepthinking.model.DtsFtpFile;
@@ -61,7 +62,7 @@ public class GetFileFromFTP {
 	protected void getFile(String path){
 		// 获得指定目录下的文件夹和文件信息
 		try {
-			ftpClient.changeWorkingDirectory(new String(path.getBytes("gbk"), "ISO-8859-1"));
+			ftpClient.changeWorkingDirectory(new String(path.getBytes("utf8"), "ISO-8859-1"));
 			FTPFile[] ftpFiles = ftpClient.listFiles();
 			if(ftpFiles.length>0){
 				for(FTPFile ftpFile:ftpFiles){
@@ -72,15 +73,17 @@ public class GetFileFromFTP {
 					} else if (ftpFile.getType() == 0) {
 						// 获取ftp文件的最后修改时间
 						Date timefile=ftpFile.getTimestamp().getTime();
-						if(timefile.getTime()<(startTime.getTime()-10000)){
-							break;
+//						if(timefile.getTime()<(startTime.getTime()-10000)){
+//							break;
+//						}
+						//只处理Word文档
+						if(ftpFile.getName().endsWith(".doc")||ftpFile.getName().endsWith(".docx")){
+							DtsFtpFile dtsFtpFile = new DtsFtpFile();
+							dtsFtpFile.setFileName(ftpFile.getName());
+							dtsFtpFile.setLastTime(timefile);
+							dtsFtpFile.setUrl(path+ftpFile.getName());
+							readInsFromFile(ftpFile.getName(), dtsFtpFile);
 						}
-						DtsFtpFile dtsFtpFile = new DtsFtpFile();
-						// 获取ftp文件的名称
-						dtsFtpFile.setFileName(ftpFile.getName());
-						dtsFtpFile.setLastTime(timefile);
-						dtsFtpFile.setUrl(path+ftpFile.getName());
-						readInsFromFile(ftpFile.getName(), dtsFtpFile);
 					}
 				}
 			}
@@ -90,7 +93,7 @@ public class GetFileFromFTP {
 	}
 	//抓取文件内容
 	protected void readInsFromFile(String filePath,DtsFtpFile dtsFtpFile) throws XmlException, OpenXML4JException{
-		String buffer =""; 
+		String str =""; 
 		File localFile=new File(filePath);
 		try {
 			OutputStream is = new FileOutputStream(localFile); 
@@ -101,24 +104,28 @@ public class GetFileFromFTP {
 			if (filePath.endsWith(".doc")) {
 				InputStream isem = new FileInputStream(new File(localFile.getAbsolutePath()));
 				WordExtractor ex = new WordExtractor(isem);
-				buffer = ex.getText();
+				str = ex.getText();
 				isem.close();
 			} else if (filePath.endsWith("docx")) {
 				OPCPackage opcPackage = POIXMLDocument.openPackage(localFile.getAbsolutePath());
 				POIXMLTextExtractor extractor = new XWPFWordExtractor(opcPackage);
-				buffer = extractor.getText();
+				str = extractor.getText();
 				opcPackage.close();
 			}
-			buffer.trim().replaceAll("(\\r\\n){2,}", "\r\n").replaceAll("(\\n){2,}", "\n");
-			//存入数据
-			TbYwScsjFile file=new TbYwScsjFile();
-			file.setBm(dtsFtpFile.getFileName());
-			file.setSclj(dtsFtpFile.getUrl());
-			file.setRksj(dtsFtpFile.getLastTime());
-			file.setNr(buffer.getBytes());
-			int i=qbservice.QBsourceAddOrUpdate(file);
-			if(i==0){
-				logger.error(dtsFtpFile.getFileName()+" 入库失败");
+			if(!str.equals("")){
+//				str.trim().replaceAll("(\\r\\n){2,}", "\r\n").replaceAll("(\\n){2,}", "\n");
+				//存入数据
+				TbYwScsjFile file=new TbYwScsjFile();
+				file.setBm(dtsFtpFile.getFileName());
+				file.setSclj(dtsFtpFile.getUrl());
+				file.setRksj(dtsFtpFile.getLastTime());
+				//解析内容
+				RxWordUtil.GetQKInfo(str);
+//				file.setNr(buffer.getBytes());
+//				int i=qbservice.QBsourceAddOrUpdate(file);
+//				if(i==0){
+//					logger.error(dtsFtpFile.getFileName()+" 入库失败");
+//				}
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());

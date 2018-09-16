@@ -36,7 +36,7 @@ attachment:
     type: txt
   #doc
   docFile:
-    dirRoot: /情报素材/
+    dirRoot: /AOService/
     type: doc
     
 debug: true
