@@ -114,11 +114,11 @@
 		    <version>2.8.5</version>
 		</dependency>
 		
-		<dependency>
+		<!-- <dependency>
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi-scratchpad</artifactId>
 		    <version>3.17</version>
-		</dependency>
+		</dependency> -->
 		<!-- 添加日志支持 -->
 		<!--解决Spring使用slf4j输出日志与log4j冲突的问题-->
 		<dependency>
