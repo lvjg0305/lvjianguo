@@ -1,7 +1,6 @@
 package deepthinking.common;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,8 +13,6 @@ public class RxWordUtil {
     private static List<Integer> listleftMarkerIndex = new ArrayList<Integer>();//【的索引
     private static List<String> listCategory = new ArrayList<String>();//分类
     private static List<SubTitle> listSubTitle = new ArrayList<SubTitle>();//二级标题
-    private static List<String> listSubContent = new ArrayList<String>();//二级标题下的段落
-    private static String firstTile=null;
     
     //获取每一个【 和 】的位置
     public static void findzkh(String wordStr){
@@ -60,18 +57,16 @@ public class RxWordUtil {
     					if(str.contains(",")){
     						str=str.replace(",", "");
     					}
-    					if(firstTile==null){
-    						firstTile=str;
-    					}
+    					str=str.replaceAll("\r|\n|\\s*", "");
     					SubTitle st=new SubTitle();
     					st.setContent(str);
     					st.setCategory(listCategory.get(i));
     					//获取在正文中的位置 
     					int indextle=0;
-    					if(i==0){
-    						indextle=wordStr.indexOf(str,listRightMarkerIndex.get(listRightMarkerIndex.size()-1)+3);
+    					if(i==listRightMarkerIndex.size()-1){
+    						indextle=wordStr.indexOf(str,listRightMarkerIndex.get(listRightMarkerIndex.size()-1)+str.length());
     					}else{
-    						indextle=wordStr.indexOf(str,listRightMarkerIndex.get(listRightMarkerIndex.size()-1)+firstTile.length());
+    						indextle=wordStr.indexOf(str,listRightMarkerIndex.get(listRightMarkerIndex.size()-1)+3);
     					}
     					st.setIndex(indextle);
     					listSubTitle.add(st);
@@ -79,27 +74,6 @@ public class RxWordUtil {
     			}
     		}
     	}
-//    	//寻找第一个】后的\r
-//        int index = wordStr.indexOf("\r", listRightMarkerIndex.get(0) + 3);
-//        //寻找第一个子对象的内容
-//        String firstTitle = wordStr.substring(listRightMarkerIndex.get(0)+ 2, listleftMarkerIndex.get(0));
-//        //获取第一个子对象的在正文中的位置 
-//        int firstTitleIndex = wordStr.indexOf(firstTitle, listRightMarkerIndex.get(listRightMarkerIndex.size()-1));
-//        int lastIndex = wordStr.indexOf(firstTitle, listRightMarkerIndex.get(listRightMarkerIndex.size() - 1) + 2);
-//        String str = wordStr.substring(listRightMarkerIndex.get(0)+ 2, lastIndex - listRightMarkerIndex.get(0)- 2);
-//        String[] tagers = str.split("\r");
-//
-//        int categoryIndex = 0;
-//        for(String t:tagers){
-//        	if (t.contains("【")){
-//        		categoryIndex++;
-//        	}else{
-//        		if (t!=null&&!t.equals("")){
-//        			listSubTitle.add(new SubTitle(listCategory.get(categoryIndex), t, wordStr.lastIndexOf(t)));
-//        		}
-//        	}
-//        }
-        
     }
     //获取二级子标题下的具体内容
     public static void GetSubContent(String wordStr){
@@ -107,19 +81,18 @@ public class RxWordUtil {
         for (int i = 0; i < listSubTitle.size(); i++)
         {
             int startIndex = listSubTitle.get(i).getIndex() + listSubTitle.get(i).getContent().length();
-            int contentLength = -1;
-            if (i < listSubTitle.size() - 1)
-            {
-                contentLength = listSubTitle.get(i+1).getIndex() - startIndex;
+            int endtIndex = -1;
+            if (i < listSubTitle.size() - 1){
+            	endtIndex = listSubTitle.get(i+1).getIndex();
+            } else{
+            	endtIndex = wordStr.length();
             }
-            else
-            {
-                contentLength = wordStr.length() - startIndex;
-            }
-
-            content = wordStr.substring(startIndex, contentLength);
+            content = wordStr.substring(startIndex, endtIndex);
+            content=content.trim();
+            content=content.replaceAll(" ", "");
+            content=content.replaceAll("\r|\n|\\s*", "");
+            content=content.replaceAll("\\-[0-9]\\-","");
             listSubTitle.get(i).setSourceText(content);
-            listSubContent.add(content);
         }
     }
     //从字符串中识别出附图 输出图名
@@ -131,9 +104,9 @@ public class RxWordUtil {
 		while (matcher.find()) { 
 			AllGra=matcher.group();
 		}
-        return AllGra;
+        return AllGra+".jpg";
     }
-    //获取报文
+    //获取报文主方法
     public static List<QKInfo> GetQKInfo(String wordStr){
     	List<QKInfo> list=new ArrayList<QKInfo>();
     	findzkh(wordStr);//获取下标
@@ -142,12 +115,12 @@ public class RxWordUtil {
     	GetSubContent(wordStr);//获取内容
     	String contentWithPic = null;
     	//获取附件
-        for (int i = 0; i < listSubContent.size(); i++){
+        for (int i = 0; i < listSubTitle.size(); i++){
         	QKInfo qk=new QKInfo();
-        	contentWithPic = listSubContent.get(i);
-        	qk.set_BTClass(listCategory.get(i));
-        	qk.set_EJBT(listSubTitle.get(i).getCategory());
-        	qk.set_ConText(listSubContent.get(i));
+        	contentWithPic = listSubTitle.get(i).getSourceText();
+        	qk.set_BTClass(listSubTitle.get(i).getCategory());
+        	qk.set_EJBT(listSubTitle.get(i).getContent());
+        	qk.set_ConText(listSubTitle.get(i).getSourceText());
             String picadd = GetAttFigures(contentWithPic);
             qk.set_Picture(picadd);
             list.add(qk);

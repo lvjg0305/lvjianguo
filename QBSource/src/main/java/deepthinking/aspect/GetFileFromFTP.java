@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -36,6 +37,7 @@ import deepthinking.common.RxWordUtil;
 import deepthinking.config.FTP_F_Config;
 import deepthinking.domain.TbYwScsjFile;
 import deepthinking.model.DtsFtpFile;
+import deepthinking.model.QKInfo;
 import deepthinking.service.QBSourceService;
 
 
@@ -73,9 +75,9 @@ public class GetFileFromFTP {
 					} else if (ftpFile.getType() == 0) {
 						// 获取ftp文件的最后修改时间
 						Date timefile=ftpFile.getTimestamp().getTime();
-//						if(timefile.getTime()<(startTime.getTime()-10000)){
-//							break;
-//						}
+						if(timefile.getTime()<(startTime.getTime()-10000)){
+							break;
+						}
 						//只处理Word文档
 						if(ftpFile.getName().endsWith(".doc")||ftpFile.getName().endsWith(".docx")){
 							DtsFtpFile dtsFtpFile = new DtsFtpFile();
@@ -113,19 +115,27 @@ public class GetFileFromFTP {
 				opcPackage.close();
 			}
 			if(!str.equals("")){
-//				str.trim().replaceAll("(\\r\\n){2,}", "\r\n").replaceAll("(\\n){2,}", "\n");
-				//存入数据
-				TbYwScsjFile file=new TbYwScsjFile();
-				file.setBm(dtsFtpFile.getFileName());
-				file.setSclj(dtsFtpFile.getUrl());
-				file.setRksj(dtsFtpFile.getLastTime());
 				//解析内容
-				RxWordUtil.GetQKInfo(str);
-//				file.setNr(buffer.getBytes());
-//				int i=qbservice.QBsourceAddOrUpdate(file);
-//				if(i==0){
-//					logger.error(dtsFtpFile.getFileName()+" 入库失败");
-//				}
+				List<QKInfo> list=RxWordUtil.GetQKInfo(str);
+				for(QKInfo qk:list){
+					//存入数据
+					TbYwScsjFile file=new TbYwScsjFile();
+					file.setBm(dtsFtpFile.getFileName());
+					file.setSclj(dtsFtpFile.getUrl());
+					file.setRksj(dtsFtpFile.getLastTime());
+					
+					/**********************************
+					
+					从qk中可以获取到每条数据的标题类别、二级标题、正文内容、附件
+					
+					
+					*******************************************/
+					
+					int i=qbservice.QBsourceAddOrUpdate(file);
+					if(i==0){
+						logger.error(dtsFtpFile.getFileName()+" 入库失败");
+					}
+				}
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
