@@ -118,7 +118,7 @@ public class RxWordUtil {
             }
 
             content = wordStr.substring(startIndex, contentLength);
-
+            listSubTitle.get(i).setSourceText(content);
             listSubContent.add(content);
         }
     }
